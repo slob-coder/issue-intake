@@ -1,0 +1,21 @@
+{
+  "config": {
+    "intakeRepo": "slob-coder/issue-intake",
+    "deliveryOrg": "slob-coder",
+    "staleTimeoutHours": 72,
+    "agentTimeoutHours": 2,
+    "maxRetries": 3,
+    "defaultLicense": "MIT",
+    "approverMode": "allowlist",
+    "approvers": [freesky-edward,slob-coder],
+    "botGithubUser": "slob-coder",
+    "designerModel": "custom-claude/anthropic/claude-opus-4-6",
+    "coderModel": "",
+    "reviewerModel": "glm-4.7",
+    "testerModel": "glm-4.7",
+    "deployerModel": "glm-4.7"
+  },
+  "processedIssues": {},
+  "activeIssue": null,
+  "lastPollAt": null
+}

@@ -5,12 +5,19 @@
 # 路径常量
 SKILL_DIR="$HOME/.openclaw/skills/issue-intake"
 SCRIPTS_DIR="$SKILL_DIR/scripts"
-INTAKE_STATE="$HOME/.openclaw/shared/projects/.intake-state.json"
+INTAKE_STATE="$SKILL_DIR/.intake-state.json"
+INTAKE_STATE_LEGACY="$HOME/.openclaw/shared/projects/.intake-state.json"
 TASK_JSON="$HOME/.openclaw/shared/task.json"
 PROJECTS_ROOT="$HOME/.openclaw/shared/projects"
 
 # 确保 state 文件存在
 ensure_state() {
+  # 自动迁移：如果旧路径文件存在且新路径不存在，移动过来
+  if [ -f "$INTAKE_STATE_LEGACY" ] && [ ! -f "$INTAKE_STATE" ]; then
+    log "Migrating .intake-state.json from legacy path to $INTAKE_STATE"
+    mv "$INTAKE_STATE_LEGACY" "$INTAKE_STATE"
+  fi
+
   if [ ! -f "$INTAKE_STATE" ]; then
     mkdir -p "$(dirname "$INTAKE_STATE")"
     cat > "$INTAKE_STATE" << 'EOF'
