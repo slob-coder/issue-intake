@@ -21,11 +21,11 @@
   "processedIssues": {
     "1": {
       "project": "skill",
-      "status": "in_progress",
+      "status": "released",
       "createdAt": "2026-03-14T11:35:22Z",
-      "completedAt": null
+      "completedAt": "2026-03-14T14:39:28Z"
     }
   },
-  "activeIssue": 1,
-  "lastPollAt": "2026-03-14T11:35:22Z"
+  "activeIssue": null,
+  "lastPollAt": "2026-03-14T15:14:44Z"
 }

@@ -54,16 +54,15 @@ mkdir -p "$PROJECT_DIR"/{repo,tasks,reviews,test-reports,release-notes}
 log "Created project directory structure: $PROJECT_DIR"
 
 # 5. Parse structured Issue body sections
-DESCRIPTION=$(echo "$ISSUE_BODY" | awk '/^### 📝 Description/{flag=1; next} /^### /{flag=0} flag' | sed '/^$/d; s/^_No response_$//')
-REQUIREMENTS=$(echo "$ISSUE_BODY" | awk '/^### 📋 Requirements/{flag=1; next} /^### /{flag=0} flag' | sed '/^$/d; s/^_No response_$//')
-CONSTRAINTS=$(echo "$ISSUE_BODY" | awk '/^### 🔧 Constraints/{flag=1; next} /^### /{flag=0} flag' | sed '/^$/d; s/^_No response_$//')
-REFERENCES=$(echo "$ISSUE_BODY" | awk '/^### 📎 References/{flag=1; next} /^### /{flag=0} flag' | sed '/^$/d; s/^_No response_$//')
-LICENSE_CHOICE=$(echo "$ISSUE_BODY" | awk '/^### 📄 License/{flag=1; next} /^### /{flag=0} flag' | sed '/^$/d; s/^_No response_$//' | head -1)
+DESCRIPTION=$(echo "$ISSUE_BODY" | awk '/^### 📝 需求描述/{flag=1; next} /^### /{flag=0} flag' | sed '/^$/d; s/^_No response_$//')
+BACKGROUND=$(echo "$ISSUE_BODY" | awk '/^### 📖 背景\/动机/{flag=1; next} /^### /{flag=0} flag' | sed '/^$/d; s/^_No response_$//')
+REQUIREMENTS=$(echo "$ISSUE_BODY" | awk '/^### 📋 具体要求/{flag=1; next} /^### /{flag=0} flag' | sed '/^$/d; s/^_No response_$//')
+CONSTRAINTS=$(echo "$ISSUE_BODY" | awk '/^### 🔧 约束条件/{flag=1; next} /^### /{flag=0} flag' | sed '/^$/d; s/^_No response_$//')
+DELIVERABLES=$(echo "$ISSUE_BODY" | awk '/^### 📦 预期产出/{flag=1; next} /^### /{flag=0} flag' | sed '/^$/d; s/^_No response_$//')
+REFERENCES=$(echo "$ISSUE_BODY" | awk '/^### 📎 参考资料/{flag=1; next} /^### /{flag=0} flag' | sed '/^$/d; s/^_No response_$//')
 
-# Default license
-if [ -z "$LICENSE_CHOICE" ] || [ "$LICENSE_CHOICE" = "_No response_" ]; then
-  LICENSE_CHOICE="$DEFAULT_LICENSE"
-fi
+# Default license (no longer in template, use config default)
+LICENSE_CHOICE="$DEFAULT_LICENSE"
 
 # 6. Detect tech stack from constraints/description
 DETECTED_LANG=""
@@ -149,6 +148,10 @@ cat > "$PROJECT_DIR/requirements.md" << REQEOF
 
 $DESCRIPTION
 
+## 背景/动机
+
+${BACKGROUND:-无}
+
 ## 具体要求
 
 $REQUIREMENTS
@@ -156,6 +159,10 @@ $REQUIREMENTS
 ## 约束条件
 
 ${CONSTRAINTS:-无特殊约束}
+
+## 预期产出
+
+${DELIVERABLES:-无}
 
 ## 参考资料
 

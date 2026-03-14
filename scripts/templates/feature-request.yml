@@ -10,71 +10,60 @@ body:
 
         Thanks for submitting a request! Our AI development team will review and build your project automatically.
 
-        **What we can build:**
-        - CLI tools, scripts, utilities
-        - Web apps (frontend/backend)
-        - Libraries and packages
-        - Data processing tools
-        - Automation scripts
-
-        **What's out of scope:**
-        - Projects requiring paid APIs or proprietary services
-        - Projects involving sensitive/personal data
-        - Projects with complex infrastructure requirements
-        - Anything violating GitHub ToS or applicable laws
-
   - type: textarea
     id: description
     attributes:
-      label: "📝 Description"
-      description: "What do you want built? What problem does it solve?"
-      placeholder: "A CLI tool that converts Markdown files to styled PDF documents..."
+      label: "📝 需求描述"
+      description: "简要描述你的需求"
+      placeholder: "简要描述你希望构建的内容..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: background
+    attributes:
+      label: "📖 背景/动机"
+      description: "需求的背景、痛点描述"
+      placeholder: "说明为什么需要这个功能，解决什么问题..."
     validations:
       required: true
 
   - type: textarea
     id: requirements
     attributes:
-      label: "📋 Requirements"
-      description: "Specific features, functionality, or behavior you'd like."
+      label: "📋 具体要求"
+      description: "需求具体的说明，越详细越好"
       placeholder: |
-        - Support CommonMark and GFM syntax
-        - Custom CSS styling support
-        - Table of contents generation
-        - Code syntax highlighting
+        - 功能点 1
+        - 功能点 2
+        - 功能点 3
     validations:
       required: true
 
   - type: textarea
     id: constraints
     attributes:
-      label: "🔧 Constraints (optional)"
-      description: "Language, framework, platform, or other technical preferences."
-      placeholder: "Preferably in Python, should work on Linux/macOS/Windows"
+      label: "🔧 约束条件"
+      description: "具体一些约束、限制条件"
+      placeholder: "语言、框架、平台、性能要求等限制条件..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: deliverables
+    attributes:
+      label: "📦 预期产出"
+      description: "最终的产物：安装包/文档等等"
+      placeholder: "例如：可执行的 CLI 工具、npm 包、Docker 镜像..."
     validations:
       required: false
 
   - type: textarea
     id: references
     attributes:
-      label: "📎 References (optional)"
-      description: "Links, screenshots, examples, or inspiration."
-      placeholder: "Similar to pandoc but simpler: https://pandoc.org/"
-    validations:
-      required: false
-
-  - type: dropdown
-    id: license
-    attributes:
-      label: "📄 License"
-      description: "What license should the project use?"
-      options:
-        - MIT (default)
-        - Apache-2.0
-        - GPL-3.0
-        - BSD-3-Clause
-        - Unlicense
-      default: 0
+      label: "📎 参考资料"
+      description: "补充说明材料"
+      placeholder: "相关链接、截图、示例或其他参考..."
     validations:
       required: false
 
