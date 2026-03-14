@@ -7,7 +7,10 @@
     "maxRetries": 3,
     "defaultLicense": "MIT",
     "approverMode": "allowlist",
-    "approvers": ["freesky-edward", "slob-coder"],
+    "approvers": [
+      "freesky-edward",
+      "slob-coder"
+    ],
     "botGithubUser": "slob-coder",
     "designerModel": "custom-claude/anthropic/claude-opus-4-6",
     "coderModel": "",
@@ -15,7 +18,14 @@
     "testerModel": "glm-4.7",
     "deployerModel": "glm-4.7"
   },
-  "processedIssues": {},
-  "activeIssue": null,
-  "lastPollAt": null
+  "processedIssues": {
+    "1": {
+      "project": "skill",
+      "status": "pending",
+      "createdAt": "2026-03-14T11:35:22Z",
+      "completedAt": null
+    }
+  },
+  "activeIssue": 1,
+  "lastPollAt": "2026-03-14T11:35:22Z"
 }
