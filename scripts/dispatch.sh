@@ -20,6 +20,38 @@ if ! load_task; then
   exit 0
 fi
 
+# --- Pre-check: Bridge status from result.status ---
+# If agent wrote result.status but didn't update top-level status, bridge it now
+RESULT_STATUS=$(jq -r '.result.status // empty' "$TASK_JSON")
+if [ -n "$RESULT_STATUS" ] && [ "$AGENT_SPAWNED" = "true" ]; then
+  # Check if result.status indicates completion
+  case "$RESULT_STATUS" in
+    "designed"|"in_review"|"approved"|"changes_requested"|"tested"|"test_failed"|"released"|"in_progress")
+      # Map to intake status
+      case "$RESULT_STATUS" in
+        "designed")           BRIDGE_STATUS="designed" ;;
+        "in_review")          BRIDGE_STATUS="in_review" ;;
+        "approved")           BRIDGE_STATUS="approved" ;;
+        "changes_requested")  BRIDGE_STATUS="in_progress" ;;
+        "tested")             BRIDGE_STATUS="tested" ;;
+        "test_failed")        BRIDGE_STATUS="in_progress" ;;
+        "in_progress")        BRIDGE_STATUS="in_progress" ;;
+        "released")           BRIDGE_STATUS="released" ;;
+      esac
+
+      if [ "$TASK_STATUS" != "$BRIDGE_STATUS" ]; then
+        log "Bridging status: $TASK_STATUS → $BRIDGE_STATUS (from result.status=$RESULT_STATUS)"
+        update_task_status "$BRIDGE_STATUS" "bridge-status" "Bridged from result.status=$RESULT_STATUS"
+        if [ -n "$ISSUE_NUMBER" ]; then
+          update_issue_state "$ISSUE_NUMBER" "$BRIDGE_STATUS"
+        fi
+        # Reload task after bridge
+        load_task
+      fi
+      ;;
+  esac
+fi
+
 # --- Pre-check: Agent timeout detection ---
 if [ "$AGENT_SPAWNED" = "true" ] && [ -n "$LAST_STATUS_CHANGE" ]; then
   HOURS_ELAPSED=$(hours_since "$LAST_STATUS_CHANGE")
@@ -83,7 +115,7 @@ fi
 case "$TASK_STATUS" in
 
   pending)
-    # Build model field
+    # Spawn designer (project init already done by poll.sh)
     MODEL_FIELD=""
     if [ -n "$DESIGNER_MODEL" ]; then
       MODEL_FIELD=", \"model\": \"$DESIGNER_MODEL\""
@@ -218,8 +250,10 @@ DESIGNEOF
       RELEASE_URL="https://github.com/$DELIVERY_REPO/releases/tag/v1.0.0"
 
       # Try to get actual release URL
-      ACTUAL_RELEASE=$(gh release view --repo "$DELIVERY_REPO" --json url --jq '.url' 2>/dev/null || echo "")
-      [ -n "$ACTUAL_RELEASE" ] && RELEASE_URL="$ACTUAL_RELEASE"
+      if [ -n "$DELIVERY_REPO" ]; then
+        ACTUAL_RELEASE=$(gh release view --repo "$DELIVERY_REPO" --json url --jq '.url' 2>/dev/null || echo "")
+        [ -n "$ACTUAL_RELEASE" ] && RELEASE_URL="$ACTUAL_RELEASE"
+      fi
 
       COMMENT_FILE=$(mktemp)
       trap 'rm -f "$COMMENT_FILE"' EXIT
