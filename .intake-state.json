@@ -7,7 +7,7 @@
     "maxRetries": 3,
     "defaultLicense": "MIT",
     "approverMode": "allowlist",
-    "approvers": [freesky-edward,slob-coder],
+    "approvers": ["freesky-edward", "slob-coder"],
     "botGithubUser": "slob-coder",
     "designerModel": "custom-claude/anthropic/claude-opus-4-6",
     "coderModel": "",

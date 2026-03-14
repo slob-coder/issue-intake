@@ -22,7 +22,7 @@ ls ~/.openclaw/skills/issue-intake/
 如果文件不在，从仓库克隆：
 
 ```bash
-gh repo clone slob/issue-intake ~/.openclaw/skills/issue-intake
+gh repo clone slob-coder/issue-intake ~/.openclaw/skills/issue-intake
 ```
 
 ### Step 2：初始化 GitHub 仓库
@@ -46,14 +46,15 @@ gh repo clone slob/issue-intake ~/.openclaw/skills/issue-intake
 openclaw cron add \
   --name "issue-intake-poll" \
   --every 5m \
-  --message "/issue-intake --cron" \
   --session isolated \
-  --timeout-seconds 120
+  --message "/issue-intake --cron" \
+  --timeout-seconds 120 \
+  --announce
 ```
 
 每 5 分钟自动检查新 Issue 并推进状态机。
 
-> **注意：** `/issue-intake --cron` 是 OpenClaw skill invocation，通过 `--message` 参数传递给 agent 执行，而不是作为 shell 命令运行。`--session isolated` 确保每次 cron 执行在独立会话中运行，不干扰主会话。
+> **注意：** `/issue-intake --cron` 是 OpenClaw skill invocation，通过 `--message` 参数传递给 agent 执行，而不是作为 shell 命令运行。`--session isolated` 确保每次 cron 执行在独立会话中运行，不干扰主会话。`--announce` 让执行结果汇报到最近活跃的聊天频道。
 
 也可以使用 cron 表达式指定精确时间：
 
@@ -62,9 +63,10 @@ openclaw cron add \
   --name "issue-intake-poll" \
   --cron "*/5 * * * *" \
   --tz "Asia/Shanghai" \
-  --message "/issue-intake --cron" \
   --session isolated \
-  --timeout-seconds 120
+  --message "/issue-intake --cron" \
+  --timeout-seconds 120 \
+  --announce
 ```
 
 ## 配置说明
@@ -154,8 +156,9 @@ gh auth status  # 确认 token scope 包含 repo
 
 ### Cron 不执行
 ```bash
-openclaw cron list                          # 确认 cron 已注册
-openclaw cron runs --name issue-intake-poll  # 查看执行历史
+openclaw cron list                                     # 确认 cron 已注册
+openclaw cron runs <job-id>                            # 查看执行历史（用 list 中的 ID）
+openclaw cron run <job-id>                             # 手动触发一次（调试用）
 ```
 
 也可以手动触发一次验证（在 OpenClaw 对话中发送）：
